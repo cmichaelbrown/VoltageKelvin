@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
+import { interpolateTemperature } from '../utils/temperatureCalculator';
 
 const TemperatureWidget = () => {
   const [inputVoltage, setInputVoltage] = useState('');
   const [temperatures, setTemperatures] = useState({ kelvin: '', celsius: '', fahrenheit: '' });
   const [error, setError] = useState('');
-
-  const calculateKelvin = (volts) => {
-    const v = parseFloat(volts);
-    return -11185.17425 * Math.pow(v, 3) + 18854.96057 * Math.pow(v, 2) - 10943.14905 * v + 2481.06972;
-  };
 
   const kelvinToCelsius = (kelvin) => {
     return kelvin - 273.15;
@@ -40,14 +36,14 @@ const TemperatureWidget = () => {
       return;
     }
 
-    const voltage = parseFloat(value);
-    if (isNaN(voltage)) {
-      setError('Please enter a valid number');
+    const kelvin = interpolateTemperature(value);
+    
+    if (kelvin === null) {
+      setError('Voltage out of range or invalid');
       setTemperatures({ kelvin: '', celsius: '', fahrenheit: '' });
       return;
     }
 
-    const kelvin = calculateKelvin(voltage);
     const celsius = kelvinToCelsius(kelvin);
     const fahrenheit = kelvinToFahrenheit(kelvin);
 
