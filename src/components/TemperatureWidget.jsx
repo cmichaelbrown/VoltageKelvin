@@ -1,32 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
-import voltageData from '../../volt_temp_lookup.json';
+import React, { useState } from 'react';
 
 const TemperatureWidget = () => {
-  const [selectedVoltage, setSelectedVoltage] = useState(null);
+  const [inputVoltage, setInputVoltage] = useState('');
   const [temperatures, setTemperatures] = useState({ kelvin: '', celsius: '', fahrenheit: '' });
   const [error, setError] = useState('');
 
-  // Format voltage data for react-select
-  const voltageOptions = voltageData.map(item => ({
-    value: item.Volts,
-    label: `${item.Volts}V`,
-    temperatures: {
-      kelvin: item.Kelvin,
-      celsius: item.Celsius,
-      fahrenheit: item.Fahrenheit
-    }
-  }));
+  const calculateKelvin = (volts) => {
+    const v = parseFloat(volts);
+    return -11185.17425 * Math.pow(v, 3) + 18854.96057 * Math.pow(v, 2) - 10943.14905 * v + 2481.06972;
+  };
 
-  const handleVoltageChange = (selectedOption) => {
-    setSelectedVoltage(selectedOption);
-    if (selectedOption) {
-      setTemperatures(selectedOption.temperatures);
-      setError('');
-    } else {
-      setTemperatures({ kelvin: '', celsius: '', fahrenheit: '' });
-      setError('Please select a valid voltage value');
+  const kelvinToCelsius = (kelvin) => {
+    return kelvin - 273.15;
+  };
+
+  const kelvinToFahrenheit = (kelvin) => {
+    return (kelvin - 273.15) * 9/5 + 32;
+  };
+
+  const handleVoltageChange = (e) => {
+    let value = e.target.value;
+    
+    // Remove any leading zeros after decimal point
+    value = value.replace(/^0+(?=\d)/, '');
+    
+    // If there's a decimal point, enforce exactly 6 decimal places
+    if (value.includes('.')) {
+      const [whole, decimal] = value.split('.');
+      if (decimal.length > 6) {
+        value = `${whole}.${decimal.slice(0, 6)}`;
+      }
     }
+    
+    setInputVoltage(value);
+
+    if (!value) {
+      setTemperatures({ kelvin: '', celsius: '', fahrenheit: '' });
+      setError('');
+      return;
+    }
+
+    const voltage = parseFloat(value);
+    if (isNaN(voltage)) {
+      setError('Please enter a valid number');
+      setTemperatures({ kelvin: '', celsius: '', fahrenheit: '' });
+      return;
+    }
+
+    const kelvin = calculateKelvin(voltage);
+    const celsius = kelvinToCelsius(kelvin);
+    const fahrenheit = kelvinToFahrenheit(kelvin);
+
+    setTemperatures({
+      kelvin: kelvin.toFixed(3),
+      celsius: celsius.toFixed(3),
+      fahrenheit: fahrenheit.toFixed(3)
+    });
+    setError('');
   };
 
   return (
@@ -37,15 +67,21 @@ const TemperatureWidget = () => {
       
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Select Voltage
+          Enter Voltage
         </label>
-        <Select
-          value={selectedVoltage}
+        <input
+          type="number"
+          value={inputVoltage}
           onChange={handleVoltageChange}
-          options={voltageOptions}
-          className="w-full"
-          placeholder="Type or select a voltage..."
-          isClearable
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Enter voltage value..."
+          step="0.000001"
+          onBlur={(e) => {
+            const value = parseFloat(e.target.value);
+            if (!isNaN(value)) {
+              setInputVoltage(value.toFixed(6));
+            }
+          }}
         />
         {error && (
           <p className="mt-1 text-sm text-red-600">{error}</p>
