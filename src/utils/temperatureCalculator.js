@@ -41,26 +41,50 @@ export const temperatureData = [
 export function interpolateTemperature(voltageInput) {
     // Convert input to number and validate
     const voltage = parseFloat(voltageInput);
+    
+    // Input validation
     if (isNaN(voltage)) {
         return null;
     }
 
-    // Check if voltage is within range
-    if (voltage < voltageData[0] || voltage > voltageData[voltageData.length - 1]) {
+    // Check voltage range
+    const minVoltage = voltageData[0];
+    const maxVoltage = voltageData[voltageData.length - 1];
+    if (voltage < minVoltage || voltage > maxVoltage) {
         return null;
     }
 
-    // Find the appropriate interval and interpolate
-    for (let i = 0; i < voltageData.length - 1; i++) {
-        if (voltageData[i] <= voltage && voltage <= voltageData[i + 1]) {
-            const v1 = voltageData[i];
-            const v2 = voltageData[i + 1];
-            const t1 = temperatureData[i];
-            const t2 = temperatureData[i + 1];
-            
-            return t1 + ((t2 - t1) / (v2 - v1)) * (voltage - v1);
-        }
-    }
+    // Find the index of the first voltage greater than our input
+    let index = voltageData.findIndex(v => v > voltage);
     
-    return null;
+    // Handle edge cases
+    if (index <= 0) {
+        index = 1; // Use first three points
+    } else if (index >= voltageData.length - 1) {
+        index = voltageData.length - 2; // Use last three points
+    }
+
+    // Get three points for parabolic interpolation
+    const v1 = voltageData[index - 1];
+    const v2 = voltageData[index];
+    const v3 = voltageData[index + 1];
+    const t1 = temperatureData[index - 1];
+    const t2 = temperatureData[index];
+    const t3 = temperatureData[index + 1];
+
+    try {
+        // Calculate interpolation parameters
+        const d3 = (v3 - v1) / (v2 - v1);
+        const a2 = t2 - t1;
+        const a3 = ((t3 - t1) / d3 - a2) / (d3 - 1);
+        const d = (voltage - v1) / (v2 - v1);
+
+        // Calculate interpolated temperature
+        const temperature = d * (a3 * (d - 1) + a2) + t1;
+        
+        // Round to 3 decimal places
+        return Math.round(temperature * 1000) / 1000;
+    } catch (error) {
+        return null;
+    }
 }
