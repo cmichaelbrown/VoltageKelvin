@@ -63,14 +63,14 @@ const TemperatureWidget = () => {
       
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Enter Voltage
+          Voltage Input
         </label>
         <input
           type="number"
           value={inputVoltage}
           onChange={handleVoltageChange}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Enter voltage value..."
+          placeholder="Enter value..."
           step="0.000001"
           onBlur={(e) => {
             const value = parseFloat(e.target.value);
