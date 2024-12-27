@@ -54,6 +54,11 @@ export function interpolateTemperature(voltageInput) {
         return null;
     }
 
+    // Special case for maximum voltage
+    if (voltage === maxVoltage) {
+        return temperatureData[temperatureData.length - 1];
+    }
+
     // Find the index of the first voltage greater than our input
     let index = voltageData.findIndex(v => v > voltage);
     
