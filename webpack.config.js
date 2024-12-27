@@ -6,6 +6,12 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'voltage-kelvin-widget.min.js',
+    library: {
+      name: 'VoltageKelvinWidget',
+      type: 'umd',
+      export: 'default'
+    },
+    globalObject: 'this'
   },
   module: {
     rules: [

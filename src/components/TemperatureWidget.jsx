@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { interpolateTemperature } from '../utils/temperatureCalculator';
 
-const TemperatureWidget = () => {
+const TemperatureWidget = ({ isHorizontal = false }) => {
   const [inputVoltage, setInputVoltage] = useState('');
   const [temperatures, setTemperatures] = useState({ kelvin: '', celsius: '', fahrenheit: '' });
   const [error, setError] = useState('');
@@ -84,7 +84,7 @@ const TemperatureWidget = () => {
         )}
       </div>
 
-      <div className="space-y-3">
+      <div className={`${isHorizontal ? 'grid grid-cols-3 gap-4' : 'space-y-3'}`}>
         <div className="p-3 bg-gray-50 rounded">
           <label className="block text-sm font-medium text-gray-700">Kelvin</label>
           <div className="text-lg font-semibold text-blue-600">
