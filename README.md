@@ -1,57 +1,73 @@
 # CryoTechnics SD-179 Temperature Calculator Widget
 
-An embeddable widget for converting voltage values to temperature readings for the CryoTechnics SD-179 silicon diode thermometer.
+A simple, embeddable widget for converting voltage values to temperature readings for the CryoTechnics SD-179 silicon diode thermometer. Perfect for research labs, educational institutions, or anyone working with CryoTechnics SD-179 sensors.
 
 ## Features
 
-- Clean, minimal, and responsive design
-- Autocomplete voltage selection
-- Temperature display in Kelvin, Celsius, and Fahrenheit
-- No interpolation - exact voltage matches only
-- Easy embedding via script tag
+- Precise voltage-to-temperature conversion for SD-179 sensors
+- Temperature display in Kelvin (K), Celsius (°C), and Fahrenheit (°F)
+- Responsive design that works on all devices
+- Clean, minimal interface
+- Flexible layout options (vertical or horizontal)
+- Lightweight and fast-loading
+- No dependencies or external APIs required
 
-## Installation
+## Quick Start
 
-1. Include the widget script in your HTML:
+Add this line to your page's `<head>` section:
 ```html
-<script src="https://your-cdn-url/voltage-kelvin-widget.min.js"></script>
+<script src="https://pub-81b2b10f65fb478788ff6fba10577bb0.r2.dev/voltage-kelvin-widget.min.js"></script>
 ```
 
-2. Add a container div where you want the widget to appear:
+Then, add this where you want the widget to appear:
+
+For vertical layout (default):
 ```html
 <div id="voltage-kelvin-widget"></div>
 ```
 
-The widget will automatically initialize if it finds the default container ID "voltage-kelvin-widget".
+For horizontal layout:
+```html
+<div id="voltage-kelvin-widget" data-horizontal="true"></div>
+```
 
-## Custom Integration
+That's it! The widget will automatically initialize and be ready to use.
 
-You can also manually initialize the widget with a custom container ID:
+## Usage Instructions
+
+1. Enter a voltage value between 0.49011V and 1.875V
+2. The widget will instantly display the corresponding temperature in:
+   - Kelvin (K)
+   - Celsius (°C)
+   - Fahrenheit (°F)
+3. If you enter a value outside the valid range, you'll see an error message
+
+## Customization
+
+### Layout Options
+- **Vertical Layout**: Default layout with temperature values stacked vertically
+- **Horizontal Layout**: Compact layout with temperature values arranged horizontally
+  - Enable by adding `data-horizontal="true"` to the widget container
+
+### Custom Container ID
+You can use a custom container ID instead of the default one:
 
 ```html
-<div id="custom-container"></div>
+<div id="my-custom-container"></div>
 <script>
-    window.initVoltageKelvinWidget('custom-container');
+    window.initVoltageKelvinWidget('my-custom-container');
 </script>
 ```
 
-## Development
+## Browser Support
+The widget works in all modern browsers including:
+- Chrome
+- Firefox
+- Safari
+- Edge
 
-1. Install dependencies:
-```bash
-npm install
-```
-
-2. Start development server:
-```bash
-npm start
-```
-
-3. Build for production:
-```bash
-npm run build
-```
+## Need Help?
+Visit our [documentation page](https://your-docs-url) for more examples and detailed information.
 
 ## License
-
-MIT License
+MIT License - feel free to use in your projects!
