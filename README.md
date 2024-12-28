@@ -66,8 +66,5 @@ The widget works in all modern browsers including:
 - Safari
 - Edge
 
-## Need Help?
-Visit our [documentation page](https://your-docs-url) for more examples and detailed information.
-
 ## License
 MIT License - feel free to use in your projects!
